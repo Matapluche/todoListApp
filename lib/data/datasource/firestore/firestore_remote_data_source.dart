@@ -6,25 +6,37 @@ import '../../../models/tasks/task.dart';
 class FirestoreRemoteDataSource {
 
     Future<List<Task>> getTasks(String collectionName) async {
-        final QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(collectionName).get();
+        final QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(collectionName).orderBy("date", descending: true).get();
         final List<DocumentSnapshot> docs = querySnapshot.docs;
-        final List<Task> operationReasonsList = <Task>[];
+        final List<Task> taskList = <Task>[];
         docs.forEach((DocumentSnapshot document) {
-            operationReasonsList.add(Task.fromDocumentSnapshot(document));
+            taskList.add(Task.fromDocumentSnapshot(document));
         });
-        return operationReasonsList;
+        return taskList;
     }
 
-    Future<bool?> createCollection(String collectionName, Map<String, dynamic> task) async {
+    Future<bool?> createTask(String collectionName, Task task) async {
         await FirebaseFirestore.instance.collection(collectionName).add({
-            "key":task
+            "title": task.title,
+            "description": task.description,
+            "translatedTitle": task.translatedTitle,
+            "translatedDescription": task.translatedDescription,
+            "isCompleted": false,
+            "date": DateTime.now()
         }).then((_){
-            print("collection created");
             return true;
         }).catchError((_){
-            print("an error occured");
             return false;
         });
+    }
+
+    void deleteTask(String collectionName, String documentId){
+        final collection = FirebaseFirestore.instance.collection(collectionName);
+        collection
+            .doc(documentId)
+            .delete()
+            .then((_) => print('Deleted'))
+            .catchError((error) => print('Delete failed: $error'));
     }
 
 }

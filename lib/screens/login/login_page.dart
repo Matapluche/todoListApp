@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
 
     Stream showLoadingStream = _loginBloc.showLoadingStream.stream;
     showLoadingStream.listen((value) {
-      _showLoading(false);
+      _showLoading(value);
     });
 
     Stream showAlertStream = _loginBloc.showAlertStream.stream;
@@ -49,22 +49,19 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
         child: Material(
           child: SafeArea(
             child: Scaffold(
-                body: GestureDetector(
+              resizeToAvoidBottomInset: false,
+              body: GestureDetector(
                   onTap: () {
                     _focusEmail.unfocus();
                     _focusPassword.unfocus();
                   },
                   child: Scaffold(
-                    appBar: AppBar(
-                      title: Text('Firebase Authentication'),
-                    ),
                     body: _showMainContent(),
                   ),
                 ),
@@ -79,87 +76,98 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _showMainContent(){
     if (!_isLoading) {
-      return Form(
-        key: _formKey,
-        child: Column(
-          children: <Widget>[
-            TextFormField(
-              controller: _emailTextController,
-              focusNode: _focusEmail,
-              validator: (value) => Validator.validateEmail(
-                email: value,
-              ),
-              decoration: InputDecoration(
-                hintText: "Email",
-                errorBorder: UnderlineInputBorder(
-                  borderRadius: BorderRadius.circular(6.0),
-                  borderSide: BorderSide(
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 8.0),
-            TextFormField(
-              controller: _passwordTextController,
-              focusNode: _focusPassword,
-              obscureText: true,
-              validator: (value) => Validator.validatePassword(
-                password: value,
-              ),
-              decoration: InputDecoration(
-                hintText: "Password",
-                errorBorder: UnderlineInputBorder(
-                  borderRadius: BorderRadius.circular(6.0),
-                  borderSide: BorderSide(
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 24.0),
-            _isLoading
-                ? CircularProgressIndicator()
-                : Row(
-              mainAxisAlignment:
-              MainAxisAlignment.spaceBetween,
+      return Center(
+        child: Container(
+            width: double.infinity,
+            margin: EdgeInsets.only(right: 18, left: 18, bottom: 10),
+            child: Column(
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      _focusEmail.unfocus();
-                      _focusPassword.unfocus();
-                      if (_formKey.currentState!.validate()) {
-                        _loginBloc.startSignInUsingEmailPassword(email: _emailTextController.text,
-                            password: _passwordTextController.text);
-                      }
-                    },
-                    child: Text(
-                      'Sign In',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 24.0),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              RegisterPage(),
+                Expanded(child: SizedBox()),
+                Image(image: AssetImage('assets/images/login.png'), height: 100,),
+                SizedBox(height: 30,),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        controller: _emailTextController,
+                        focusNode: _focusEmail,
+                        validator: (value) => Validator.validateEmail(
+                          email: value,
                         ),
-                      );
-                    },
-                    child: Text(
-                      'Register',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                        decoration: InputDecoration(
+                          hintText: "Correo electrónico",
+                          errorBorder: UnderlineInputBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                            borderSide: BorderSide(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8.0),
+                      TextFormField(
+                        controller: _passwordTextController,
+                        focusNode: _focusPassword,
+                        obscureText: true,
+                        validator: (value) => Validator.validatePassword(
+                          password: value,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: "Contraseña",
+                          errorBorder: UnderlineInputBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                            borderSide: BorderSide(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 24.0),
+                      _isLoading
+                          ? CircularProgressIndicator()
+                          : Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                _focusEmail.unfocus();
+                                _focusPassword.unfocus();
+                                if (_formKey.currentState!.validate()) {
+
+                                  _loginBloc.startSignInUsingEmailPassword(email: _emailTextController.text,
+                                      password: _passwordTextController.text);
+                                }
+                              },
+                              child: Text(
+                                'Ingresar',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 24.0),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                //_loginBloc.similarity();
+                                _navigation("registerPage");
+                              },
+                              child: Text(
+                                'Registro',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                 ),
+                Expanded(child: SizedBox()),
               ],
             )
-          ],
         ),
       );
     }

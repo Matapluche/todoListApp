@@ -9,12 +9,16 @@ class FirestoreRepository {
         FirestoreRemoteDataSource? getTasksRemoteDataSource
     }): _firestoreRemoteDataSource = getTasksRemoteDataSource ?? locator<FirestoreRemoteDataSource>();
 
-    Future<List<Task>> getOperationReasons(String collectionName) {
+    Future<List<Task>> getTasks(String collectionName) {
         return _firestoreRemoteDataSource!.getTasks(collectionName);
     }
 
-    Future<bool?> createCollection(String collectionName, Map<String, dynamic> task) async  {
-        return _firestoreRemoteDataSource!.createCollection(collectionName, task);
+    Future<bool?> createTask(String collectionName, Task task) async  {
+        return _firestoreRemoteDataSource!.createTask(collectionName, task);
+    }
+
+    void deleteTask(String collectionName, String documentId) async  {
+        return _firestoreRemoteDataSource!.deleteTask(collectionName, documentId);
     }
 
 }

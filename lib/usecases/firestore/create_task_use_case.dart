@@ -2,16 +2,16 @@ import 'package:todo_app/models/tasks/task.dart';
 import '../../data/repository/firestore/firestore_repository.dart';
 import '../../locator/service_locator.dart';
 
-class CreateCollectionUseCase {
+class CreateTaskUseCase {
 
     final FirestoreRepository? _firestoreRepository;
 
-    CreateCollectionUseCase({
+    CreateTaskUseCase({
         FirestoreRepository? firestoreRepository
     }): _firestoreRepository = firestoreRepository ?? locator<FirestoreRepository>();
 
-    Future<bool?> invoke(String collectionName, Map<String, dynamic> task) async {
-        return _firestoreRepository!.createCollection(collectionName, task);
+    Future<bool?> invoke(String collectionName, Task task) async {
+        return _firestoreRepository!.createTask(collectionName, task);
     }
 
 

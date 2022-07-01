@@ -2,16 +2,16 @@ import 'package:todo_app/models/tasks/task.dart';
 import '../../data/repository/firestore/firestore_repository.dart';
 import '../../locator/service_locator.dart';
 
-class GetTasksUseCase {
+class DeleteTasksUseCase {
 
     final FirestoreRepository? _firestoreRepository;
 
-    GetTasksUseCase({
+    DeleteTasksUseCase({
         FirestoreRepository? getTasksRepository
     }): _firestoreRepository = getTasksRepository ?? locator<FirestoreRepository>();
 
-    Future<List<Task>> invoke(String collectionName) {
-        return _firestoreRepository!.getTasks(collectionName);
+    void invoke(String collectionName, String documentId) {
+        return _firestoreRepository!.deleteTask(collectionName, documentId);
     }
 
 }
