@@ -21,4 +21,8 @@ class FirestoreRepository {
         return _firestoreRemoteDataSource!.deleteTask(collectionName, documentId);
     }
 
+    void updateTaskState(String collectionName, String documentId, bool isCompleted) async  {
+        return _firestoreRemoteDataSource!.updateTaskState(collectionName, documentId, isCompleted);
+    }
+
 }

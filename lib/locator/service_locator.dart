@@ -10,6 +10,7 @@ import '../usecases/firebaseauth/register_using_email_password_use_case.dart';
 import '../usecases/firebaseauth/signin_using_email_password_use_case.dart';
 import '../usecases/firestore/create_task_use_case.dart';
 import '../usecases/firestore/get_tasks_use_case.dart';
+import '../usecases/firestore/update_task_state_use_case.dart';
 
 final GetIt locator = GetIt.instance..allowReassignment = true;
 void setupLocator() {
@@ -29,6 +30,7 @@ void setupLocator() {
     locator.registerLazySingleton<SignInUsingEmailPasswordUseCase>(() => SignInUsingEmailPasswordUseCase());
     locator.registerLazySingleton<CreateTaskUseCase>(() => CreateTaskUseCase());
     locator.registerLazySingleton<DeleteTasksUseCase>(() => DeleteTasksUseCase());
+    locator.registerLazySingleton<UpdateTaskStateUseCase>(() => UpdateTaskStateUseCase());
 
 
 }

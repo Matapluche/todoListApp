@@ -13,15 +13,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   late LoginBloc _loginBloc;
-
   final _formKey = GlobalKey<FormState>();
-
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
-
   final _focusEmail = FocusNode();
   final _focusPassword = FocusNode();
-
   bool _isLoading = false;
 
   @override
@@ -68,7 +64,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-
         bloc: _loginBloc
     );
 
@@ -90,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: <Widget>[
                       TextFormField(
+                        textInputAction: TextInputAction.next,
                         controller: _emailTextController,
                         focusNode: _focusEmail,
                         validator: (value) => Validator.validateEmail(
@@ -107,6 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 8.0),
                       TextFormField(
+                        textInputAction: TextInputAction.done,
                         controller: _passwordTextController,
                         focusNode: _focusPassword,
                         obscureText: true,
@@ -136,13 +133,11 @@ class _LoginPageState extends State<LoginPage> {
                                 _focusEmail.unfocus();
                                 _focusPassword.unfocus();
                                 if (_formKey.currentState!.validate()) {
-
                                   _loginBloc.startSignInUsingEmailPassword(email: _emailTextController.text,
                                       password: _passwordTextController.text);
                                 }
                               },
-                              child: Text(
-                                'Ingresar',
+                              child: Text('Ingresar',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
@@ -151,7 +146,6 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {
-                                //_loginBloc.similarity();
                                 _navigation("registerPage");
                               },
                               child: Text(
@@ -184,9 +178,8 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => RegisterPage()));
       }
       break;
-      case "profilePage": {
+      case "homePage": {
         Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (context) => new HomePage(user: _loginBloc.user!)));
-        //Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (context) => new ProfilePage(user: _loginBloc.user!)));
       }
       break;
     }

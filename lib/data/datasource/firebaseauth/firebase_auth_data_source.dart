@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FireBaseAuthDataSource {
-  // For registering a new user
+
   Future<User?> registerUsingEmailPassword({
     required String name,
     required String email,
@@ -29,11 +29,9 @@ class FireBaseAuthDataSource {
     } catch (e) {
       print(e);
     }
-
     return user;
   }
 
-  // For signing in an user (have already registered)
   Future<User?> signInUsingEmailPassword({
     required String email,
     required String password,
@@ -61,10 +59,8 @@ class FireBaseAuthDataSource {
 
   Future<User?> refreshUser(User user) async {
     FirebaseAuth auth = FirebaseAuth.instance;
-
     await user.reload();
     User? refreshedUser = auth.currentUser;
-
     return refreshedUser;
   }
 }

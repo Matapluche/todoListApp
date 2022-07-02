@@ -20,7 +20,7 @@ class LoginBloc extends Bloc {
 
    //region SignInUsingEmailPassword
 
-    Future<User?> signInUsingEmailPassword({required String email,
+    Future<User?> _signInUsingEmailPassword({required String email,
         required String password}) async {
         return _signInUsingEmailPasswordUseCase!.invoke(email: email, password: password);
     }
@@ -28,9 +28,9 @@ class LoginBloc extends Bloc {
     void startSignInUsingEmailPassword({required String email,
         required String password}){
         showLoadingStream.add(true);
-        signInUsingEmailPassword(email: email, password: password).then((value)  {
+        _signInUsingEmailPassword(email: email, password: password).then((value)  {
             user = value;
-            navigationStream.add("profilePage");
+            navigationStream.add("homePage");
         }).onError((error, stackTrace) {
             showLoadingStream.add(false);
             showAlertStream.add(error.toString());
@@ -38,7 +38,6 @@ class LoginBloc extends Bloc {
     }
 
     //endregion
-
 
     @override
     void dispose() {

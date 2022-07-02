@@ -39,4 +39,13 @@ class FirestoreRemoteDataSource {
             .catchError((error) => print('Delete failed: $error'));
     }
 
+    void updateTaskState(String collectionName, String documentId, bool isCompleted){
+        var collection = FirebaseFirestore.instance.collection(collectionName);
+        collection
+            .doc(documentId)
+            .update({'isCompleted' : isCompleted})
+            .then((_) => print('Updated'))
+            .catchError((error) => print('Update Failed: $error'));
+    }
+
 }

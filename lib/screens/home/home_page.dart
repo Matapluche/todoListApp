@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 import 'package:todo_app/screens/home/home_bloc.dart';
-import '../../data/widgets/emptystate/empty_state.dart';
-import '../../data/widgets/tasklisitem/task_listitem.dart';
 import '../../models/tasks/task.dart';
 import '../../utils/alerts.dart';
+import '../../widgets/emptystate/empty_state.dart';
+import '../../widgets/tasklisitem/task_listitem.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -75,10 +75,9 @@ class _HomePageState extends State<HomePage> {
                       setState(() {
                         snapshot.data!.removeAt(index);
                       });
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text("Tarea eliminada")));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Tarea eliminada")));
                     },
-                    child:  TaskListItem(snapshot.data![index]),
+                    child:  TaskListItem(task: snapshot.data![index], updateTaskState: _homeBloc.updateTaskState,),
                   );
                 },
               );

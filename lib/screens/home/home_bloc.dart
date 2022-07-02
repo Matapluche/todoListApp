@@ -7,12 +7,14 @@ import '../../models/tasks/task.dart';
 import '../../usecases/firestore/create_task_use_case.dart';
 import '../../usecases/firestore/delete_task_use_case.dart';
 import '../../usecases/firestore/get_tasks_use_case.dart';
+import '../../usecases/firestore/update_task_state_use_case.dart';
 
 class HomeBloc extends Bloc {
 
     final GetTasksUseCase? _getTasksUseCase;
     final CreateTaskUseCase? _createCollectionUseCase;
     final DeleteTasksUseCase? _deleteTasksUseCase;
+    final UpdateTaskStateUseCase? _updateTaskStateUseCase;
 
     StreamController<String> showAlertStream = StreamController<String>();
     StreamController<bool> reloadStream = StreamController<bool>();
@@ -25,10 +27,12 @@ class HomeBloc extends Bloc {
     HomeBloc({
         GetTasksUseCase? getTasksUseCase,
         CreateTaskUseCase? createCollectionUseCase,
-        DeleteTasksUseCase? deleteTasksUseCase
+        DeleteTasksUseCase? deleteTasksUseCase,
+        UpdateTaskStateUseCase? updateTaskStateUseCase
     }): _getTasksUseCase = getTasksUseCase ?? locator<GetTasksUseCase>(),
             _createCollectionUseCase = createCollectionUseCase ?? locator<CreateTaskUseCase>(),
-            _deleteTasksUseCase = deleteTasksUseCase ?? locator<DeleteTasksUseCase>();
+            _deleteTasksUseCase = deleteTasksUseCase ?? locator<DeleteTasksUseCase>(),
+            _updateTaskStateUseCase = updateTaskStateUseCase ?? locator<UpdateTaskStateUseCase>();
 
     //region getTasks
 
@@ -40,7 +44,7 @@ class HomeBloc extends Bloc {
 
    //region createNewTask
 
-    Future<bool?> createNewTask(String collectionName, Task task) async  {
+    Future<bool?> _createNewTask(String collectionName, Task task) async  {
         return _createCollectionUseCase!.invoke(collectionName, task);
     }
 
@@ -54,7 +58,7 @@ class HomeBloc extends Bloc {
             isCompleted: false,
             date: DateTime.now()
         );
-        createNewTask(user!.email!, task).then((value)  {
+        _createNewTask(user!.email!, task).then((value)  {
             reloadStream.add(true);
         }).onError((error, stackTrace) {
             showAlertStream.add(error.toString());
@@ -71,6 +75,14 @@ class HomeBloc extends Bloc {
 
     //endregion
 
+    //region createNewTask
+
+    void updateTaskState(String documentId, bool isCompleted) async  {
+        return _updateTaskStateUseCase!.invoke(user!.email!, documentId, isCompleted);
+    }
+
+    //endregion
+
     //region Translate
 
     void translate(String title, String description) async {
@@ -81,10 +93,10 @@ class HomeBloc extends Bloc {
 
     //endregion
 
-
     @override
     void dispose() {
         showAlertStream.close();
+        reloadStream.close();
     }
 
 }
