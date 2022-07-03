@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:todo_app/utils/validator.dart';
 
-successAlert(BuildContext context, String description, {Function? onAcceptTap = null}) {
+infoAlert(BuildContext context, String description, {Function? onAcceptTap = null}) {
   Alert(
     context: context,
     type: AlertType.info,

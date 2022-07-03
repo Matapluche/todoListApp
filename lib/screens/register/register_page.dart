@@ -35,7 +35,7 @@ class _RegisterPageState extends State<RegisterPage> {
     Stream showAlertStream = _registerBloc.showAlertStream.stream;
     showAlertStream.listen((value) {
       _showLoading(false);
-      successAlert(context, value);
+      infoAlert(context, value);
     });
 
     Stream navigationStream = _registerBloc.navigationStream.stream;

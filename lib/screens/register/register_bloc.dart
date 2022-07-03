@@ -2,11 +2,14 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 import 'package:todo_app/usecases/firebaseauth/register_using_email_password_use_case.dart';
+import '../../constants/constants.dart';
 import '../../locator/service_locator.dart';
+import '../../utils/connectivity_validator.dart';
 
 class RegisterBloc extends Bloc {
 
     final RegisterUsingEmailPasswordUseCase? _registerUsingEmailPasswordUseCase;
+    final ConnectivityValidator? _connectivityValidator;
 
     StreamController<bool> navigationStream = StreamController<bool>();
     StreamController<String> showAlertStream = StreamController<String>();
@@ -16,9 +19,11 @@ class RegisterBloc extends Bloc {
 
     RegisterBloc({
         RegisterUsingEmailPasswordUseCase? registerUsingEmailPasswordUseCase,
-    }): _registerUsingEmailPasswordUseCase = registerUsingEmailPasswordUseCase ?? locator<RegisterUsingEmailPasswordUseCase>();
+        ConnectivityValidator? connectivityValidator
+    }): _registerUsingEmailPasswordUseCase = registerUsingEmailPasswordUseCase ?? locator<RegisterUsingEmailPasswordUseCase>(),
+            _connectivityValidator = connectivityValidator ?? locator<ConnectivityValidator>();
 
-   //region
+   //region RegisterUsingEmailPassword
 
     Future<User?> _registerUsingEmailPassword({required String name, required String email,
         required String password}) {
@@ -26,14 +31,20 @@ class RegisterBloc extends Bloc {
     }
 
     void startRegisterUsingEmailPassword({required String name, required String email,
-        required String password}){
-        showLoadingStream.add(true);
-        _registerUsingEmailPassword(name: name, email: email, password: password).then((value)  {
-            user = value;
-            _onStartRegisterUsingEmailPasswordSuccess();
-        }).onError((error, stackTrace) {
-            showAlertStream.add(error.toString());
-        });
+        required String password}) async{
+        bool result = await _connectivityValidator!.checkInternetConnection();
+        if(result){
+            showLoadingStream.add(true);
+            _registerUsingEmailPassword(name: name, email: email, password: password).then((value)  {
+                user = value;
+                _onStartRegisterUsingEmailPasswordSuccess();
+            }).onError((error, stackTrace) {
+                showAlertStream.add(error.toString());
+            });
+        }
+        else{
+            showAlertStream.add(noInternetAvailableMessage);
+        }
     }
 
     void _onStartRegisterUsingEmailPasswordSuccess(){

@@ -36,6 +36,11 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
+    Stream showAlertStream = _homeBloc.showAlertStream.stream;
+    showAlertStream.listen((value) {
+      infoAlert(context, value);
+    });
+
   }
 
   @override
